@@ -187,15 +187,20 @@ namespace Lumber
                     new UOItem(World.Player.Layers.First(x => x.Graphic == 0x0F47 || x.Graphic == 0x0F48)).Equip();
                 }
 
-                var tmptrees = Fields.Where(x => x.IsTree & x.Distance<20 & (Math.Abs(x.Tree.Z - World.Player.Z) < 3) & (x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30))).ToList();
-
+                UO.PrintInformation("Debug: hledani stromu");
+                var tmptrees = Fields.Where(x => x.IsTree & x.Distance < 50 & (Math.Abs(x.Tree.Z - World.Player.Z) < 3) & (x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30))).ToList();
+                tmptrees.Sort((x, y) => x.Distance.CompareTo(y.Distance));
                 while (true)
                 {
                     // znovu najde v okoli 20 poli stromy pokud predesly list je temer vytezen
                     UO.PrintInformation("Debug: hledani stromu");
-                    if (tmptrees.Count(x => x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30)) < 5)
-                        tmptrees = Fields.Where(x => x.IsTree & x.Distance < 20 & (Math.Abs(x.Tree.Z - World.Player.Z) < 3) & (x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30))).ToList();
-                    UO.PrintWarning("Debug: nalezeno celkem {0} stromu, zbyva vytezit {1}", tmptrees.Count(x=>x.IsTree), tmptrees.Count(x => x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30)));
+
+                    if (tmptrees.Count(x => x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30)) < 1)
+                    {
+                        tmptrees = Fields.Where(x => x.IsTree & x.Distance < 50 & (Math.Abs(x.Tree.Z - World.Player.Z) < 3) & (x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30))).ToList();
+                        tmptrees.Sort((x, y) => x.Distance.CompareTo(y.Distance));
+                    }
+                    UO.PrintWarning("Debug: nalezeno celkem {0} stromu, zbyva vytezit {1}", tmptrees.Count(x => x.IsTree), tmptrees.Count(x => x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30)));
 
                     UO.PrintInformation("Debug: hledani nejblizsiho stromu");
                     var trees = tmptrees.Where(x => x.IsTree & Math.Abs(x.Tree.Z - World.Player.Z) < 3 & (x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30))).ToList();
@@ -215,7 +220,7 @@ namespace Lumber
                         }
                     }
                     UO.PrintInformation("Debug: presun ke stromu");
-                    while(!MoveTo(tmpP))
+                    while (!MoveTo(tmpP))
                     {
                         UO.PrintError("Neuspesny presun na pozici");
                         UO.PrintInformation("Debug: hledani pole pro tezeni nasledujciho stromu");
