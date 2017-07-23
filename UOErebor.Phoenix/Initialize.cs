@@ -229,17 +229,17 @@ namespace Phoenix.Plugins
 
 
         [Command]
-        public void autospika()
+        public void autosipka()
         {
             if (SaveClass.AutoHarm)
             {
                 SaveClass.AutoHarm = false;
-                UO.PrintInformation("Auto odparovani ON");
+                UO.PrintError("Auto odparovani Off");
             }
             else
             {
                 SaveClass.AutoHarm = true;
-                UO.PrintError("Auto odparovani Off");
+                UO.PrintInformation("Auto odparovani ON");
             }
         }
 
@@ -328,7 +328,7 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("     ,runy - nove okno s fcemi pro nacteni run a jejich pouziti");
             Notepad.WriteLine("     ,hid - odpocita hiding a blokuje beh tesne pred hidnutim");
             Notepad.WriteLine("     ,hidoff -vypne blokovani behu, pro odhidnuti, pripadne kdyz se blokovani automaticky nevypne ( vypada jako lagy pri behu, pri chuzi normalni hra)");
-            Notepad.WriteLine("     ,fiend - da 'all friend' na vsechny modre a vsechny ovladane summony v okoli");
+            Notepad.WriteLine("     ,friend - da 'all friend' na vsechny modre a vsechny ovladane summony v okoli");
             Notepad.WriteLine("         summony je treba mit otargetovane, nebo mit postahovane zalozky");
             Notepad.WriteLine("     ,kill - misto 'all friend pouzije 'all kill' na vse s cervenou karmou v okoli");
             Notepad.WriteLine("     ,presun X - presune X nahodnych veci z 1 kontejneru do loticiho backpacku");
@@ -356,6 +356,7 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("     ,entic - zacne oslabovat laststatus");
             Notepad.WriteLine("     ,setprovo - vyhodi targety pro nastaveni 2 cilu");
             Notepad.WriteLine("     ,provo vyprovokuje nastavene cile");
+           // Notepad.WriteLine("     ,musicreset - pri erroru ..Callback already registred pouzit toto");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("Targeting:");
@@ -388,6 +389,22 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("     ,healadd - prida zamereneho hrace do seznau lecenych");
             Notepad.WriteLine("     ,healremove X - vymaze leceneho s X=ID, ziskane z ,healinfo");
             Notepad.WriteLine("     ,heal - zapina/vypina automaticke leceni");
+            Notepad.WriteLine("     ");
+            Notepad.WriteLine("     ");
+            Notepad.WriteLine("Weapons: ");
+            Notepad.WriteLine("     ,weaponadd - prida zbran do seznamu");
+            Notepad.WriteLine("     ,weaponsclear - vymaze zapamatovane zbrane");
+            Notepad.WriteLine("     ,switch - prehazuje mezi nastavenymi zbranemi");
+            Notepad.WriteLine("     ");
+            Notepad.WriteLine("     ");
+            Notepad.WriteLine("Equipy:     ");
+            Notepad.WriteLine("     ,equipadd - zamerenim na baglik s equipem ho nacte a ulozi, pred pridanim musi byt baglik otevreny");
+            Notepad.WriteLine("     ,eq - vypis ulozenych equipu");
+            Notepad.WriteLine("     ,equipsclear - vymaze zapamatovane equipy");
+            Notepad.WriteLine("     ,equipdel X - vymaze equip s danym id=X");
+            Notepad.WriteLine("     ,dress X - oblece equip s id=X");
+            Notepad.WriteLine("     ,dresssave X - oblece equip s id=X a aktualni  schova do zamereneho pytliku");
+            Notepad.WriteLine("     ");
         }
 
 

@@ -54,6 +54,12 @@ namespace Phoenix.Plugins.Equips
             equipy[index].DressOnly();
         }
 
+        [Command, BlockMultipleExecutions]
+        public void dresssave(int index)
+        {
+            UO.PrintWarning("Zamer baglik do ktereho se schova aktualni equip");
+            equipy[index].Dress(new UOItem(UIManager.TargetObject()));
+        }
 
     }
 }

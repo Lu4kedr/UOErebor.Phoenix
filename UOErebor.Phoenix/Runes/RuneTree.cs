@@ -94,13 +94,14 @@ namespace Phoenix.Plugins.Runes
             if (new UOItem(r.Containers[2]).Distance < 5)
             {
                 if (r.Containers[2] > 0x0) new UOItem(r.Containers[2]).Use();
-                UO.Wait(100);
+                UO.Wait(200);
                 if (r.Containers[1] > 0x0) new UOItem(r.Containers[1]).Use();
-                UO.Wait(100);
+                UO.Wait(200);
                 if (r.Containers[0] > 0x0) new UOItem(r.Containers[0]).Use();
-                UO.Wait(100);
+                UO.Wait(200);
             }
             else UO.PrintError("Nedosahnes na bednu");
+            UO.Wait(200);
         }
 
         public static void FillTreeView(TreeView t)

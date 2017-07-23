@@ -24,12 +24,28 @@ namespace Phoenix.Plugins
         [Command, BlockMultipleExecutions]
         public void peace()
         {
+            if (MusicDone)
+            {
+                Core.UnregisterServerMessageCallback(0x1C, OnCalls);
+            }
             Peace_Entic(StandardSkill.Peacemaking, Aliases.GetObject("laststatus"));
         }
         [Command, BlockMultipleExecutions]
         public void entic()
         {
+            if(MusicDone)
+            {
+                Core.UnregisterServerMessageCallback(0x1C, OnCalls);
+            }
             Peace_Entic(StandardSkill.Discordance_Enticement, Aliases.GetObject("laststatus"));
+        }
+
+        [Command, BlockMultipleExecutions]
+        public void musicreset()
+        {
+            Core.UnregisterServerMessageCallback(0x1C, OnCalls);
+            MusicDone = true;
+            return;
         }
 
 
@@ -53,6 +69,7 @@ namespace Phoenix.Plugins
         {
             if (Target == null)
             {
+                Core.UnregisterServerMessageCallback(0x1C, OnCalls);
                 MusicDone = true;
                 return;
             }

@@ -188,7 +188,7 @@ namespace Lumber
                 }
 
                 UO.PrintInformation("Debug: hledani stromu");
-                var tmptrees = Fields.Where(x => x.IsTree & x.Distance < 50 & (Math.Abs(x.Tree.Z - World.Player.Z) < 3) & (x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30))).ToList();
+                var tmptrees = Fields.Where(x => x.IsTree & x.Distance < 20 & (Math.Abs(x.Tree.Z - World.Player.Z) < 3) & (x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30))).ToList();
                 tmptrees.Sort((x, y) => x.Distance.CompareTo(y.Distance));
                 while (true)
                 {
@@ -197,8 +197,14 @@ namespace Lumber
 
                     if (tmptrees.Count(x => x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30)) < 1)
                     {
-                        tmptrees = Fields.Where(x => x.IsTree & x.Distance < 50 & (Math.Abs(x.Tree.Z - World.Player.Z) < 3) & (x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30))).ToList();
+                        tmptrees = Fields.Where(x => x.IsTree & x.Distance < 20 & (Math.Abs(x.Tree.Z - World.Player.Z) < 3) & (x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30))).ToList();
                         tmptrees.Sort((x, y) => x.Distance.CompareTo(y.Distance));
+                        if(tmptrees.Count<2)
+                        {
+                            tmptrees = Fields.Where(x => x.IsTree & (Math.Abs(x.Tree.Z - World.Player.Z) < 3) & (x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30))).ToList();
+                            tmptrees.Sort((x, y) => x.Distance.CompareTo(y.Distance));
+                            tmptrees = tmptrees.Take(1).ToList();
+                        }
                     }
                     UO.PrintWarning("Debug: nalezeno celkem {0} stromu, zbyva vytezit {1}", tmptrees.Count(x => x.IsTree), tmptrees.Count(x => x.Tree.Harvested == DateTime.MinValue || (DateTime.Now - x.Tree.Harvested) > TimeSpan.FromMinutes(30)));
 
@@ -277,7 +283,7 @@ namespace Lumber
 
                 if (Try == 0 & UseCrystal)
                 {
-                    UO.Wait(1500);
+                    UO.Wait(LumbDelay);
                     UO.Say(".vigour");
                 }
             }
@@ -285,7 +291,7 @@ namespace Lumber
             {
                 if (Try == 0 & UseCrystal)
                 {
-                    UO.Wait(1500);
+                    UO.Wait(LumbDelay);
                     UO.Say(".vigour");
                     return;
 

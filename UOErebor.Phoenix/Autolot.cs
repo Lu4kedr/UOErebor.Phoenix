@@ -42,6 +42,8 @@ namespace Phoenix.Plugins
         private bool CarvProgress = false;
 
 
+
+
         private static bool _Food
         {
             get { return food; }
@@ -488,6 +490,7 @@ namespace Phoenix.Plugins
         {
             if (LotRunning)
             {
+                LotRun.Elapsed -= LotRun_Elapsed;
                 LotRunning = false;
                 LotRun.Stop();
                 LotRun.Dispose();
@@ -497,7 +500,7 @@ namespace Phoenix.Plugins
             else
             {
                 LotRunning = true;
-                LotRun = new System.Timers.Timer(200);
+                LotRun = new System.Timers.Timer(300);
                 LotRun.Elapsed += LotRun_Elapsed;
                 LotRun.Start();
                 UO.PrintInformation("Lot On");
@@ -527,8 +530,6 @@ namespace Phoenix.Plugins
 
         private void Checker()
         {
-            World.FindDistance = 4;
-
             // Check Gold & mesec
             if (World.Player.Backpack.AllItems.FindType(0x0EED).Amount >= GoldLimit)
             {
@@ -553,10 +554,12 @@ namespace Phoenix.Plugins
                 }
             }
             if (CarvProgress) return;
+            World.FindDistance = 4;
             if (!World.Player.Hidden)
             {
-                foreach (UOItem it in World.Ground.Where(x => x.Graphic == 0x2006 && x.Items.CountItems() < 7 && x.Items.CountItems() > 0).ToList())
+                foreach (UOItem it in World.Ground.Where(x => x.Graphic == 0x2006 & x.Distance < 5 & x.Items.CountItems()>0 & x.Items.CountItems() < 9).ToList()) 
                 {
+                    if (CarvProgress) return;
                     Lot(it);
                     UO.Wait(200);
                 }
@@ -565,10 +568,11 @@ namespace Phoenix.Plugins
 
         private void Lot(UOItem it)
         {
-            foreach (UOItem i in it.Items.Where(item => LotItems.Any(li => item.Graphic == li.Key)).ToList())
+            if (it.Items.CountItems() < 1 || it.Items.CountItems() > 9) return;
+            foreach (var i in it.Items.Where(item => item.Container==it & LotItems.Any(li => item.Graphic == li.Key)).ToList())
             {
                 UO.MoveItem(i, ushort.MaxValue, Aliases.GetObject("LotBackpack") == 0xFFFFFFF ? World.Player.Backpack : Aliases.GetObject("LotBackpack"));
-                UO.Wait(300);
+                UO.Wait(200);
             }
         }
 
@@ -578,7 +582,6 @@ namespace Phoenix.Plugins
         {
             try
             {
-                LotRun.Elapsed -= LotRun_Elapsed;
                 if (Aliases.GetObject("CarvTool") == 0xFFFFFFF)
                 {
                     UO.PrintError("Neni nastaven nuz");
@@ -590,7 +593,7 @@ namespace Phoenix.Plugins
                 {
                     if (IgnoreList.Contains(it)) continue;
                     it.Click();
-                    UO.Wait(150);
+                    UO.Wait(200);
                     if (jezdidla.Contains(it.Name.ToLower())) continue;
 
                     it.WaitTarget();
@@ -601,7 +604,7 @@ namespace Phoenix.Plugins
             }
             finally
             {
-                LotRun.Elapsed += LotRun_Elapsed;
+
                 new UOItem(Aliases.GetObject("ActualWeapon")).Equip();
                 new UOItem(Aliases.GetObject("ActualShield")).Use();
                 CarvProgress = false;

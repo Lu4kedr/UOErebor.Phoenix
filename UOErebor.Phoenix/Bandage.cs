@@ -31,8 +31,19 @@ namespace Phoenix.Plugins
         public void bandage()
         {
             Heal(15);
-            new UOItem(Aliases.GetObject("ActualWeapon")).Equip();
+            UOItem tmp = new UOItem(Aliases.GetObject("ActualWeapon"));
             new UOItem(Aliases.GetObject("ActualShield")).Use();
+            if(tmp.Layer!=Layer.LeftHand)
+            {
+                if (World.Player.Mana == World.Player.MaxMana)
+                    tmp.Equip();
+                else
+                {
+                    World.Player.WaitTarget();
+                    tmp.Use();
+                }
+
+            }
         }
         [Command]
         public void bandage(bool Shaman)

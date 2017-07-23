@@ -11,7 +11,7 @@ namespace Phoenix.Plugins
     {
         public static DateTime HiddenTime;
         private int Hits = 0;
-        readonly private int[] HiddenDelay = {3200,2600,2150,1600 }; // TODO delays 25, 50, 75, 100 skill 
+        readonly private int[] HiddenDelay = {3200,2700,2150,1600 }; // TODO delays 25, 50, 75, 100 skill 
         System.Timers.Timer HiddenCheck;
 
         [Command]
@@ -26,11 +26,11 @@ namespace Phoenix.Plugins
             Core.UnregisterClientMessageCallback(0x02, ForceWalk);
             Hits = WorldData.World.Player.Hits;
             int Delay = 0;
-            if (WorldData.World.Player.Skills[21].Value > 99) Delay = HiddenDelay[3];
-            else if (WorldData.World.Player.Skills[21].Value > 74) Delay = HiddenDelay[2];
-            else if (WorldData.World.Player.Skills[21].Value > 49) Delay = HiddenDelay[1];
-            else if (WorldData.World.Player.Skills[21].Value > 24) Delay = HiddenDelay[0];
-
+            if (WorldData.World.Player.Skills[21].Value > 990) Delay = HiddenDelay[3];
+            else if (WorldData.World.Player.Skills[21].Value > 740) Delay = HiddenDelay[2];
+            else if (WorldData.World.Player.Skills[21].Value > 490) Delay = HiddenDelay[1];
+            else if (WorldData.World.Player.Skills[21].Value > 240) Delay = HiddenDelay[0];
+            UO.PrintInformation(WorldData.World.Player.Skills[21].Value.ToString());
             int step = 2;
             UO.Warmode(false);
             UO.UseSkill(StandardSkill.Hiding);

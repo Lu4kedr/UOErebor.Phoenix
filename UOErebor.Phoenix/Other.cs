@@ -68,8 +68,11 @@ namespace Phoenix.Plugins
         [Command, BlockMultipleExecutions]
         public void kill()
         {
+
+
+
             int wait = 100;
-            foreach (UOCharacter enemy in World.Characters)
+            foreach (UOCharacter enemy in World.Characters.Where(c => c.Notoriety > Notoriety.Criminal && c.Distance < 12).ToList())
             {
                 if (enemy.Renamable) continue;
                 if (enemy.Distance > 11) continue;
@@ -84,8 +87,17 @@ namespace Phoenix.Plugins
         }
 
         [Command("vyber"), BlockMultipleExecutions]
-        public void TakeAllFrom(Serial target, int delay)
+        public void TakeAllFrom(int delay)
         {
+            UO.PrintInformation("Zamer kontainer ktery chces vybrat");
+            Serial target = UIManager.TargetObject();
+            if (target == Aliases.Self)
+            {
+                UO.PrintError("Nezameruj sebe");
+                return;
+            }
+            new UOItem(target).Use();
+            UO.Wait(100);
             foreach (var it in new UOItem(target).AllItems)
             {
                 it.Move(ushort.MaxValue, Aliases.GetObject("LotBackpack")); // TODO lotbackpack
@@ -294,7 +306,7 @@ namespace Phoenix.Plugins
         public CallbackResult onHpChanged(byte[] data, CallbackResult prevResult)//0xa1
         {
             UOCharacter character = new UOCharacter(Phoenix.ByteConverter.BigEndian.ToUInt32(data, 1));
-            if (character.Serial == World.Player.Serial) return CallbackResult.Normal;
+            //if (character.Serial == World.Player.Serial) return CallbackResult.Normal;
             ushort maxHits = 100; // Nejvyssi HITS bez nakouzleni
             ushort hits = Phoenix.ByteConverter.BigEndian.ToUInt16(data, 7);
             ushort[] color = new ushort[4];
@@ -304,8 +316,16 @@ namespace Phoenix.Plugins
             color[3] = 0x0FAB;//fialova - enemy;
             int col = 0;
 
-            if (character.Hits - hits < -4 || character.Hits - hits > 4)
+
+
+            if (Math.Abs(character.Hits - hits) > 2) 
             {
+                if (character.Renamable)
+                {
+                    character.Print(0x005d, "[{0} HP] {1}", ((maxHits / 100) * hits), (hits - character.Hits));
+                    return CallbackResult.Normal;
+
+                }
                 if (character.Hits > hits)
                 {
                     if (character.Poisoned) col = 2;
@@ -319,8 +339,13 @@ namespace Phoenix.Plugins
 
                 if ((character.Model == 0x0190 || character.Model == 0x0191))
                 {
-                    character.Print(color[col], "{2} [{0} HP] {1}", ((maxHits / 100) * hits), (hits - character.Hits), character.Name);
+                    if (character.Serial == World.Player.Serial)
+                        character.Print(color[col], "[{0} HP] {1}", ((maxHits / 100) * hits), (hits - character.Hits));
+                    
+                    else
+                        character.Print(color[col], "{2} [{0} HP] {1}", ((maxHits / 100) * hits), (hits - character.Hits), character.Name);
                 }
+
 
 
                 if (character.Serial == Aliases.LastAttack)
