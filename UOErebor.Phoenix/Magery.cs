@@ -143,7 +143,6 @@ namespace Phoenix.Plugins
         {
             if(Spell=="frostbolt" || Spell=="necrobolt")
             {
-                UO.Attack(Target);
                 new UOCharacter(Target).WaitTarget();
                 UO.Say(".{0}", Spell);
             }

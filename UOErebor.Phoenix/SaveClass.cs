@@ -51,6 +51,18 @@ namespace Phoenix.Plugins
                 AutoHeal.Healedplayers = value;
             }
         }
+
+        public int MinToBandage
+        {
+            get
+            {
+                return AutoHeal.MinimalPlayerHP;
+            }
+            set
+            {
+                AutoHeal.MinimalPlayerHP = value;
+            }
+        }
         public List<EqSet> Equipy
         {
             get
@@ -129,6 +141,18 @@ namespace Phoenix.Plugins
             set
             {
                 Other.AutoUnParalyze = value;
+            }
+        }
+
+        public bool OnHitBandage
+        {
+            get
+            {
+                return Other.OnHitBandage;
+            }
+            set
+            {
+                Other.OnHitBandage = value;
             }
         }
         public bool HarmArrow { get; set; }

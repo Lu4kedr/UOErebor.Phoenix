@@ -523,13 +523,14 @@ namespace Phoenix.Plugins
         {
             LotRun.Elapsed -= LotRun_Elapsed;
             if (LotRunning) Checker();
-            UO.Wait(100);
+            UO.Wait(200);
             LotRun.Elapsed += LotRun_Elapsed;
         }
 
 
         private void Checker()
         {
+            if (CarvProgress) return;
             // Check Gold & mesec
             if (World.Player.Backpack.AllItems.FindType(0x0EED).Amount >= GoldLimit)
             {
@@ -553,15 +554,15 @@ namespace Phoenix.Plugins
 
                 }
             }
-            if (CarvProgress) return;
+
             World.FindDistance = 4;
             if (!World.Player.Hidden)
             {
-                foreach (UOItem it in World.Ground.Where(x => x.Graphic == 0x2006 & x.Distance < 5 & x.Items.CountItems()>0 & x.Items.CountItems() < 9).ToList()) 
+                foreach (UOItem it in World.Ground.Where(x => x.Graphic == 0x2006 & x.Distance < 4 & x.Items.CountItems()>0 & x.Items.CountItems() < 9).ToList()) 
                 {
                     if (CarvProgress) return;
                     Lot(it);
-                    UO.Wait(200);
+                    UO.Wait(250);
                 }
             }
         }
@@ -572,7 +573,7 @@ namespace Phoenix.Plugins
             foreach (var i in it.Items.Where(item => item.Container==it & LotItems.Any(li => item.Graphic == li.Key)).ToList())
             {
                 UO.MoveItem(i, ushort.MaxValue, Aliases.GetObject("LotBackpack") == 0xFFFFFFF ? World.Player.Backpack : Aliases.GetObject("LotBackpack"));
-                UO.Wait(200);
+                UO.Wait(250);
             }
         }
 

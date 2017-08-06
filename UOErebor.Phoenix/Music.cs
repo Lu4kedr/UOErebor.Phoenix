@@ -9,7 +9,7 @@ namespace Phoenix.Plugins
 {
     public class Music
     {
-        readonly string[] musicDoneCalls = { " have no musical instrument ", "uklidneni se povedlo.", " neni co uklidnovat!", "uklidnovani nezabralo.", "tohle nemuzes ", "you play poorly.", "oslabeni uspesne.", "oslabeni se nepovedlo.", " tve moznosti." };
+        readonly string[] musicDoneCalls = { " have no musical instrument ", "uklidneni se povedlo.", " neni co uklidnovat!", "uklidnovani nezabralo.", "tohle nemuzes ", "you play poorly.", "oslabeni bylo uspesne.", "oslabeni se nepovedlo.", " tve moznosti." };
         private DateTime StartMusic;
         public static bool MusicDone { get; private set; }
         private Serial T1, T2;

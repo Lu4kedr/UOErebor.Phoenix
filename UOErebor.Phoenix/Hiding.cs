@@ -59,14 +59,16 @@ namespace Phoenix.Plugins
                 }
                 UO.Wait(10);
             }
-            if (Journal.WaitForText(true, 300, "nepovedlo se ti schovat.", "skryti se povedlo."))
+            if (Journal.WaitForText(true, 500, "nepovedlo se ti schovat.", "skryti se povedlo."))
             {
                 UO.Wait(100);
                 if (!World.Player.Hidden)
                     Core.UnregisterClientMessageCallback(0x02, ForceWalk);
                 else
                     HiddenTime = DateTime.Now;
-                    UO.RunCmd("bandage");
+
+
+                UO.RunCmd("bandage");
             }
             else
             {
@@ -79,7 +81,7 @@ namespace Phoenix.Plugins
 
         private void RunHidCheck()
         {
-            HiddenCheck = new System.Timers.Timer(100);
+            HiddenCheck = new System.Timers.Timer(200);
             HiddenCheck.Elapsed += HiddenCheck_Elapsed;
             HiddenCheck.Start();
         }
@@ -88,11 +90,12 @@ namespace Phoenix.Plugins
         {
            if(!World.Player.Hidden)
             {
+                HiddenCheck.Elapsed -= HiddenCheck_Elapsed;
                 HiddenCheck.Stop();
                 hidoff();
                 UO.Say(".resync");
                 UO.PrintInformation("Resynced");
-                HiddenCheck.Elapsed += HiddenCheck_Elapsed;
+
                 HiddenCheck.Dispose();
             }
         }

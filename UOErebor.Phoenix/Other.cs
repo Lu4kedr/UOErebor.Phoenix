@@ -14,9 +14,34 @@ namespace Phoenix.Plugins
         private int x;
         private int Exp;
         readonly static string[] onParaCalls = { "nohama ti projela silna bolest", "citis, ze se nemuzes hybat.", " crying awfully." };
+        readonly static string[] onHitCalls =  { "Tvuj cil krvaci.", "Skvely zasah!", "Kriticky zasah!", "Vysavas staminu", "Vysavas zivoty!" };
 
         private static bool autoUnParalyze;
+        private static bool onHitBandage;
         public static event EventHandler OnParalyze;
+
+        public static bool OnHitBandage
+        {
+            get
+            {
+                return onHitBandage;
+            }
+            set
+            {
+                if(value)
+                {
+                    Core.UnregisterServerMessageCallback(0x1C, OnHitBand);
+
+                    Core.RegisterServerMessageCallback(0x1C, OnHitBand);
+                    UO.Print("regis");
+                }
+                else
+                {
+                    Core.UnregisterServerMessageCallback(0x1C, OnHitBand);
+                }
+                onHitBandage = value;
+            }
+        }
         public static bool AutoUnParalyze
         {
             get
@@ -38,8 +63,6 @@ namespace Phoenix.Plugins
                 autoUnParalyze = value;
             }
         }
-
-        // todo rozdil sipka/hram blokace kdyz autoheal
 
         
         public Other()
@@ -181,6 +204,38 @@ namespace Phoenix.Plugins
         }
 
 
+        [Command]
+        public void rename(string newName)
+        {
+            UOCharacter ch = new UOCharacter(UIManager.TargetObject());
+            PacketWriter pw = new PacketWriter(0x75);
+            pw.Write((UInt32)ch.Serial);
+            var tmp = newName;
+            while (tmp.Length != 30)
+            {
+                tmp += " ";
+            }
+            pw.WriteAsciiString(tmp, tmp.Length);
+            Core.SendToServer(pw.GetBytes());
+
+        }
+
+        [Command]
+        public void rename(Serial Target,string newName)
+        {
+
+            PacketWriter pw = new PacketWriter(0x75);
+            pw.Write((UInt32)Target);
+            var tmp = newName;
+            while (tmp.Length != 30)
+            {
+                tmp += " ";
+            }
+            pw.WriteAsciiString(tmp, tmp.Length);
+            Core.SendToServer(pw.GetBytes());
+
+        }
+
         [ServerMessageHandler(0x1C, Priority = CallbackPriority.Lowest)]
         public CallbackResult onExp(byte[] data, CallbackResult prevResult)
         {
@@ -257,7 +312,7 @@ namespace Phoenix.Plugins
             UOCharacter cil = World.GetCharacter(serial);
             if (cil.Hits < 0 || cil.Hits > 10000)
             {
-                cil.RequestStatus(50);
+                cil.RequestStatus(20);
                 return CallbackResult.Normal;
             }
             else
@@ -340,8 +395,11 @@ namespace Phoenix.Plugins
                 if ((character.Model == 0x0190 || character.Model == 0x0191))
                 {
                     if (character.Serial == World.Player.Serial)
+                    {
                         character.Print(color[col], "[{0} HP] {1}", ((maxHits / 100) * hits), (hits - character.Hits));
-                    
+
+
+                    }
                     else
                         character.Print(color[col], "{2} [{0} HP] {1}", ((maxHits / 100) * hits), (hits - character.Hits), character.Name);
                 }
@@ -374,6 +432,40 @@ namespace Phoenix.Plugins
             }
             return CallbackResult.Normal;
 
+        }
+
+        static CallbackResult OnHitBand(byte[] data, CallbackResult prevResult)
+        {
+            AsciiSpeech packet = new AsciiSpeech(data);
+
+            foreach (string s in onHitCalls)
+            {
+                if (packet.Text.Contains(s) && World.Player.Hits < World.Player.MaxHits - 10)
+                {
+                    Core.UnregisterServerMessageCallback(0x1C, OnHitBand);
+                    UO.Say(",bandage");
+                    Core.RegisterServerMessageCallback(0x1C, OnHitBand);
+                    return CallbackResult.Normal;
+                }
+            }
+            return CallbackResult.Normal;
+        }
+        [Command]
+        public void dmg()
+        {
+            while(!UO.Dead)
+            {
+                UO.Warmode(false);
+                UO.Press(System.Windows.Forms.Keys.PageUp);
+                UO.Press(System.Windows.Forms.Keys.PageUp);
+                while (World.Player.Hits > 120)
+                    UO.Wait(100);
+                UO.Press(System.Windows.Forms.Keys.End);
+                UO.Press(System.Windows.Forms.Keys.End);
+                while (World.Player.Hits < 130)
+                    UO.Wait(100);
+                UO.Wait(200);
+            }
         }
     }
 }

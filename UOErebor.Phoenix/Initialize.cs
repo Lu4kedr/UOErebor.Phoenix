@@ -244,9 +244,30 @@ namespace Phoenix.Plugins
         }
 
         [Command]
+        public void Hitbandage()
+        {
+            if (SaveClass.OnHitBandage)
+            {
+                SaveClass.OnHitBandage = false;
+                UO.PrintError("Banda po rane Off");
+            }
+            else
+            {
+                SaveClass.OnHitBandage = true;
+                UO.PrintInformation("Banda po rane ON");
+            }
+        }
+
+        [Command]
         public void runy()
         {
             Application.Run(new Runy());
+        }
+
+        [Command]
+        public void summons()
+        {
+            Application.Run(new Summons.Summons());
         }
 
         [Command]
@@ -264,6 +285,12 @@ namespace Phoenix.Plugins
         public void criticalhits(int MinimalHits2Drink)
         {
             SaveClass.CriticalHP = MinimalHits2Drink;
+        }
+
+        [Command]
+        public void bandagehits(int MinimalHits2Drink)
+        {
+            SaveClass.MinToBandage = MinimalHits2Drink;
         }
 
 
@@ -316,6 +343,7 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("     ");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("Dalsi Nastaveni/Funkce:");
+            Notepad.WriteLine("     ,hitbandage - zapnuti/vypnuti bandy po rane");
             Notepad.WriteLine("     ,autodrink true/false - zapnuti/vypnuti automatickeho piti Healu pri nastavenych HP, nebo pri dmg jehoz opakovani = smrt");
             Notepad.WriteLine("     ,criticalhits X - nastaveni minimalni urovne pro piti X= ciselna hodnota");
             Notepad.WriteLine("     ,naprahy - zaponani/vypinani vypisu naprahu");
@@ -389,6 +417,7 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("     ,healadd - prida zamereneho hrace do seznau lecenych");
             Notepad.WriteLine("     ,healremove X - vymaze leceneho s X=ID, ziskane z ,healinfo");
             Notepad.WriteLine("     ,heal - zapina/vypina automaticke leceni");
+            Notepad.WriteLine("     ,bandagehits X - X mnozstvi HP pod kteryma bude bandit sebe ");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("Weapons: ");

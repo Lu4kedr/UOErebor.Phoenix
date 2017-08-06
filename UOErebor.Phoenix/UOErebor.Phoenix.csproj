@@ -81,6 +81,18 @@
       <DependentUpon>Runy.cs</DependentUpon>
     </Compile>
     <Compile Include="SaveClass.cs" />
+    <Compile Include="Summons\OneTargetDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Summons\OneTargetDetails.Designer.cs">
+      <DependentUpon>OneTargetDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Summons\Summons.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Summons\Summons.Designer.cs">
+      <DependentUpon>Summons.cs</DependentUpon>
+    </Compile>
     <Compile Include="Targeting.cs" />
     <Compile Include="Tracking.cs" />
     <Compile Include="TreasureMap.cs" />
@@ -98,6 +110,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Runes\Runy.resx">
       <DependentUpon>Runy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Summons\OneTargetDetails.resx">
+      <DependentUpon>OneTargetDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Summons\Summons.resx">
+      <DependentUpon>Summons.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -30,10 +30,20 @@ namespace Phoenix.Plugins
         [Command]
         public void bandage()
         {
-            Heal(15);
+            Serial tmpp = Aliases.GetObject("laststatus");
+            if(!Heal(15))
+            {
+                if (tmpp != World.Player.Serial) Aliases.SetObject("laststatus", tmpp);
+                else Aliases.SetObject("laststatus", 0xFFFFFFF);
+                return;
+            }
             UOItem tmp = new UOItem(Aliases.GetObject("ActualWeapon"));
-            new UOItem(Aliases.GetObject("ActualShield")).Use();
-            if(tmp.Layer!=Layer.LeftHand)
+            UOItem tmps = new UOItem(Aliases.GetObject("ActualShield"));
+            if (tmps.Layer != Layer.LeftHand)
+            {
+                tmps.Use();
+            }
+                if (tmp.Layer!=Layer.LeftHand)
             {
                 if (World.Player.Mana == World.Player.MaxMana)
                     tmp.Equip();
@@ -42,7 +52,8 @@ namespace Phoenix.Plugins
                     World.Player.WaitTarget();
                     tmp.Use();
                 }
-
+                if(tmpp!=World.Player.Serial)Aliases.SetObject("laststatus", tmpp);
+                else Aliases.SetObject("laststatus", 0xFFFFFFF);
             }
         }
         [Command]
@@ -128,17 +139,18 @@ namespace Phoenix.Plugins
             }
         }
 
-        private void Heal(int Equip, bool CleanBandage = true)
+        private bool Heal(int Equip, bool CleanBandage = true)
         {
-            if (( DateTime.Now - StartBandage < TimeSpan.FromSeconds(6)) && !BandageDone) return;
+            if (( DateTime.Now - StartBandage < TimeSpan.FromSeconds(6)) && !BandageDone) return false;
             else
                 Journal.EntryAdded -= Journal_EntryAdded;
-            if (Equip == 15 && World.Player.Hits == World.Player.MaxHits ) return;
+            if (Equip == 15 && World.Player.Hits == World.Player.MaxHits ) return false;
             StartBandage = DateTime.Now;
             BandageDone = false;
             if (CleanBandage) UO.Say(".heal" + Equip.ToString());
             else UO.Say(".samheal" + Equip.ToString());
             Journal.EntryAdded += Journal_EntryAdded;
+            return true;
         }
 
 
