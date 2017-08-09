@@ -20,6 +20,7 @@ namespace Phoenix.Plugins.Autoheal
         private bool CrystalState;
         private bool Paralyze;
 
+
         public AutoHeal()
         {
             CastPause = false;
@@ -76,7 +77,7 @@ namespace Phoenix.Plugins.Autoheal
             else
             {
                 HealRun = true;
-                Healedplayers = new HealedPlayers();
+                if (Healedplayers == null) Healedplayers = new HealedPlayers();
                 Automat.Elapsed += Automat_Elapsed;
                 Other.OnParalyze += Other_OnParalyze;
                 UO.PrintInformation("Healing On");

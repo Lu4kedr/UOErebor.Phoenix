@@ -18,6 +18,7 @@ namespace Phoenix.Plugins
         private DateTime LastHitTime;
         private string texttemp;
 
+
         public bool Klerik
         {
             get

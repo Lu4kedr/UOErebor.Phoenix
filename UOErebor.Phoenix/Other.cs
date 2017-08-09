@@ -15,9 +15,11 @@ namespace Phoenix.Plugins
         private int Exp;
         readonly static string[] onParaCalls = { "nohama ti projela silna bolest", "citis, ze se nemuzes hybat.", " crying awfully." };
         readonly static string[] onHitCalls =  { "Tvuj cil krvaci.", "Skvely zasah!", "Kriticky zasah!", "Vysavas staminu", "Vysavas zivoty!" };
-
+        readonly static string[] TextFilterarr = { "you put ", " cancelled", "unexpected", " way to use that "};
         private static bool autoUnParalyze;
         private static bool onHitBandage;
+
+
         public static event EventHandler OnParalyze;
 
         public static bool OnHitBandage
@@ -254,7 +256,19 @@ namespace Phoenix.Plugins
             return CallbackResult.Normal;
         }
 
-
+        [ServerMessageHandler(0x1C)]
+        public CallbackResult textFilter(byte[] data, CallbackResult prevResult)
+        {
+            AsciiSpeech speech = new AsciiSpeech(data);
+            foreach (string s in TextFilterarr)
+            {
+                if (speech.Text.ToLowerInvariant().Contains(s))
+                {
+                    return CallbackResult.Eat;
+                }
+            }
+            return CallbackResult.Normal;
+        }
 
         [ServerMessageHandler(0x22, Priority = CallbackPriority.Lowest)]
         public CallbackResult OnWalkRequestSucceeded(byte[] data, CallbackResult prevResult)

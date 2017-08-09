@@ -141,10 +141,40 @@ namespace Phoenix.Plugins
         [Command]
         public void ccast(string Spell, Serial Target)
         {
-            if(Spell=="frostbolt" || Spell=="necrobolt")
+            if (Spell == "frostbolt" || Spell == "necrobolt")
             {
                 new UOCharacter(Target).WaitTarget();
                 UO.Say(".{0}", Spell);
+            }
+        }
+
+        [Command]
+        public void nhcast(string Spell, Serial Target)
+        {
+            try
+            {
+                var mana = World.Player.Mana;
+                int tmp = 0;
+                Autoheal.AutoHeal.CastPause = true;
+                if (Spell == "frostbolt" || Spell == "necrobolt")
+                {
+                    new UOCharacter(Target).WaitTarget();
+                    UO.Say(".{0}", Spell);
+                }
+                else
+                {
+                    UO.Cast(Spell, Target);
+                }
+                tmp = Math.Abs(mana - World.Player.Mana);
+                while (tmp < 5)
+                {
+                    UO.Wait(200);
+                    tmp = Math.Abs(mana - World.Player.Mana);
+                }
+            }
+            finally
+            {
+                Autoheal.AutoHeal.CastPause = false;
             }
         }
 
