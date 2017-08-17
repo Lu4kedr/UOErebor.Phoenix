@@ -36,21 +36,21 @@ namespace Phoenix.Plugins
             if (World.Player.Mana == World.Player.MaxMana)
             {
                 UO.PrintInformation("Mas plnou manu!!");
-                if (World.Player.Hits < World.Player.MaxHits) UO.Say(",bandage");
+                if (World.Player.Hits < World.Player.MaxHits) UO.Say(",bandage true");
                 return;
             }
             if (World.Player.Hits > 80)
             {
                 if (World.Player.Hits < World.Player.MaxHits)
                 {
-                    UO.Say(",bandage");
+                    UO.Say(",bandage true");
                     UO.Say(".voodooobet");
                 }
                 else
                 {
                     UO.Say(".voodooobet");
                     UO.Wait(100);
-                    UO.Say(",bandage");
+                    UO.Say(",bandage true");
                 }
                 UO.Wait(100);
             }

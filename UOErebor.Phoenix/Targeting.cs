@@ -29,7 +29,10 @@ namespace Phoenix.Plugins
                 List<UOCharacter> redList = new List<UOCharacter>();
                 List<UOCharacter> sortedlist;
                 redList.Clear();
-                foreach (UOCharacter ch in World.Characters.Where(x => x.Notoriety > Notoriety.Criminal && x.Distance < 15 && x.Serial != World.Player.Serial && !x.Renamable))
+                var tlist = World.Characters.Where(x => x.Notoriety > Notoriety.Criminal && x.Distance < 15 && x.Serial != World.Player.Serial && !x.Renamable).ToList();
+                if(World.Player.Notoriety>Notoriety.Guild)
+                    tlist= World.Characters.Where(x => x.Distance < 15 && x.Serial != World.Player.Serial && !x.Renamable).ToList();
+                foreach (UOCharacter ch in tlist)
                 {
                     redList.Add(ch);
                 }

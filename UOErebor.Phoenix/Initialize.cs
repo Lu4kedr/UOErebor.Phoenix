@@ -343,6 +343,7 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("     ");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("Dalsi Nastaveni/Funkce:");
+            Notepad.WriteLine("     ,hpprint - zapnuti/vypnuti vypisu HP nad hlavami");
             Notepad.WriteLine("     ,hitbandage - zapnuti/vypnuti bandy po rane");
             Notepad.WriteLine("     ,autodrink true/false - zapnuti/vypnuti automatickeho piti Healu pri nastavenych HP, nebo pri dmg jehoz opakovani = smrt");
             Notepad.WriteLine("     ,criticalhits X - nastaveni minimalni urovne pro piti X= ciselna hodnota");
@@ -394,6 +395,10 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("     ");
             Notepad.WriteLine("Tracking");
             Notepad.WriteLine("     ,track - vypise potrebne informace o prikazu ,track");
+            Notepad.WriteLine("     ,trackadd - zamerit hrace/jeho hlavu pro ignorovani pri tracku");
+            Notepad.WriteLine("     ,trackadd JMENO - pridani ignorovani hrace zadanim jeho JMENA");
+            Notepad.WriteLine("     ,trackinfo - vypis ignorovanych hracu");
+            Notepad.WriteLine("     ,trackremove X - odstraneni hrace z ignorovani podle indexu z trackinfo");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("Veterinary:");

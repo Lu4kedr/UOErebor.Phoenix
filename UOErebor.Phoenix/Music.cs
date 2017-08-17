@@ -9,7 +9,7 @@ namespace Phoenix.Plugins
 {
     public class Music
     {
-        readonly string[] musicDoneCalls = { " have no musical instrument ", "uklidneni se povedlo.", " neni co uklidnovat!", "uklidnovani nezabralo.", "tohle nemuzes ", "you play poorly.", "oslabeni bylo uspesne.", "oslabeni se nepovedlo.", " tve moznosti." };
+        readonly string[] musicDoneCalls = { " have no musical instrument ", "uklidneni se povedlo.", " neni co uklidnovat!", "uklidnovani nezabralo.", "tohle nemuzes ", "you play poorly.", "oslabeni bylo uspesne.", "oslabeni se nepovedlo.", " tve moznosti.", " tve moznosti", "provokace se " };
         private DateTime StartMusic;
         public static bool MusicDone { get; private set; }
         private Serial T1, T2;
@@ -93,15 +93,15 @@ namespace Phoenix.Plugins
                 MusicDone = true;
                 return;
             }
-            MusicDoneFailSafe();
             UOCharacter tmp1 = new UOCharacter(Target1);
             UOCharacter tmp2 = new UOCharacter(Target2);
-            MusicDone = false;
             if (tmp1.Distance > 18 || tmp2.Distance > 18)
             {
                 MusicDone = true;
                 return;
             }
+            MusicDone = false;
+            MusicDoneFailSafe();
             tmp1.WaitTarget();
             UO.Say(".provo");
             tmp2.WaitTarget();
@@ -111,8 +111,9 @@ namespace Phoenix.Plugins
 
         private void MusicDoneFailSafe()
         {
-            StartMusic = DateTime.Now;
             Core.RegisterServerMessageCallback(0x1C, OnCalls);
+            StartMusic = DateTime.Now;
+
             FS = new System.Timers.Timer(200);
             FS.Elapsed += FS_Elapsed;
             FS.Start();
@@ -127,7 +128,7 @@ namespace Phoenix.Plugins
                 FS.Dispose();
                 FS = null;
             }
-            if(DateTime.Now-StartMusic>TimeSpan.FromSeconds(5))
+            if(DateTime.Now-StartMusic>TimeSpan.FromSeconds(4))
             {
                 MusicDone = true;
                 FS.Elapsed -= FS_Elapsed;

@@ -95,9 +95,10 @@ namespace Phoenix.Plugins
             UOCharacter cil = new UOCharacter(Aliases.GetObject("laststatus"));
             if (cil.Distance > 6)
             {
-                UO.PrintError("Moc daleko");
+                UO.PrintError("Moc daleko <{0}>",cil.Distance);
                 return;
             }
+            Journal.Clear();
             UO.Say(".throw");
             //new UOItem(Aliases.GetObject("ActualWeapon")).Equip();
             if (Journal.WaitForText(true, 1000, "Nemas zadny cil.", "Nevidis na cil"))
@@ -105,15 +106,19 @@ namespace Phoenix.Plugins
                 UO.PrintInformation("HAZ!!");
                 return;
             }
-            UO.Wait(1000);
-            UO.PrintInformation("3");
-            UO.Wait(1000);
-            UO.PrintInformation("2");
-            UO.Wait(1000);
-            UO.PrintInformation("1");
-            UO.Wait(1000);
+            if (Journal.Contains("Dyka byla magicky ", " jsi cil!"))
+            {
+                UO.Wait(1000);
+                UO.PrintInformation("<<KUDLA>>   3   <<KUDLA>>");
+                UO.Wait(1000);
+                UO.PrintInformation("<<KUDLA>>   2   <<KUDLA>>");
+                UO.Wait(1000);
+                UO.PrintInformation("<<KUDLA>>   1   <<KUDLA>>");
+                UO.Wait(1000);
+            }
             UO.PrintInformation("HAZ!!");
             World.Player.Print("Hazej!!!");
+            System.Media.SystemSounds.Asterisk.Play();
 
         }
     }

@@ -555,6 +555,17 @@ namespace Phoenix.Plugins
                 }
             }
 
+            if(bolts)
+            {
+                foreach (var ar in World.Player.Backpack.AllItems.Where(x => x.Graphic == 0x0F3F && x.Color == 0x0000))
+                {
+                    ar.Click();
+                    UO.Wait(100);
+                    if (ar.Name == "arrow" || ar.Name == "arrows")
+                        ar.DropHere(ushort.MaxValue);
+                }
+            }
+
             World.FindDistance = 4;
             if (!World.Player.Hidden)
             {

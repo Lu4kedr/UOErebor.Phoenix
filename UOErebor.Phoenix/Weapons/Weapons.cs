@@ -52,6 +52,12 @@ namespace Phoenix.Plugins.Weapons
         [Command("switch"),BlockMultipleExecutions]
         public void SwitchWeapons()
         {
+            SwitchWeapons(0);
+        }
+
+
+        public void SwitchWeapons(int cnt)
+        {
 
 
             if (weapons.Count < 1)
@@ -77,6 +83,7 @@ namespace Phoenix.Plugins.Weapons
 
 
                 UO.ClickObject(World.Player);
+
             }
         }
     }

@@ -80,7 +80,7 @@ namespace Phoenix.Plugins
             while (!healed)
             {
                 UO.Wait(100);
-                if (DateTime.Now - start > TimeSpan.FromSeconds(6)) break;
+                if (DateTime.Now - start > TimeSpan.FromSeconds(7)) break;
                 if (!harmed)
                 {
                     UO.PrintInformation("Neni zranen");

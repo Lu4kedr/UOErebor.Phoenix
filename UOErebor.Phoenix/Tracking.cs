@@ -44,7 +44,17 @@ namespace Phoenix.Plugins
             }
         }
 
-        public static void Remove(int index)
+        [Command, BlockMultipleExecutions]
+        public static void trackinfo()
+        {
+            for(var t=0;t<Ignored.Count;t++)
+            {
+                UO.PrintWarning("{0}, index {1}", Ignored[t], t);
+            }
+        }
+
+        [Command, BlockMultipleExecutions]
+        public static void trackRemove(int index)
         {
             if (index >= 0 && index >= Ignored.Count) return;
             Ignored.RemoveAt(index);
@@ -120,6 +130,7 @@ namespace Phoenix.Plugins
                 if (Ignored.Contains(s)) continue;
                 UO.PrintError(s);
             }
+            UO.PrintWarning("<*<*<|-|-|-|-|-|-|-|-|-|-|>*>*>");
         }
 
         CallbackResult onMenu(byte[] data, CallbackResult prevResult)
@@ -157,7 +168,7 @@ namespace Phoenix.Plugins
             dialogID = 0;
             menuid = 0;
             Core.UnregisterServerMessageCallback(0x7C, onMenu);
-            return CallbackResult.Eat;
+            return CallbackResult.Sent; //TODO Track hlasky pri ..
         }
     }
 }

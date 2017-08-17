@@ -18,7 +18,7 @@ namespace Phoenix.Plugins
         readonly static string[] TextFilterarr = { "you put ", " cancelled", "unexpected", " way to use that "};
         private static bool autoUnParalyze;
         private static bool onHitBandage;
-
+        private static bool hpPrint;
 
         public static event EventHandler OnParalyze;
 
@@ -66,7 +66,40 @@ namespace Phoenix.Plugins
             }
         }
 
-        
+        public static bool HPPrint
+        {
+            get
+            {
+                return hpPrint;
+            }
+            set
+            {
+                if(value)
+                {
+
+                    Core.RegisterServerMessageCallback(0xA1, onHpChanged);
+                }
+                else
+                    Core.UnregisterServerMessageCallback(0xA1, onHpChanged);
+                hpPrint = value;
+            }
+
+        }
+
+        [Command]
+        public void hpprint()
+        {
+            if (HPPrint)
+            {
+                HPPrint = false;
+                UO.PrintError("Vypis HP vypnut");
+            }
+            else
+            {
+                HPPrint = true;
+                UO.PrintInformation("Vypis HP zapnut");
+            }
+        }
         public Other()
         {
             Exp = 0;
@@ -371,8 +404,8 @@ namespace Phoenix.Plugins
             }
         }
 
-        [ServerMessageHandler(0xa1)]
-        public CallbackResult onHpChanged(byte[] data, CallbackResult prevResult)//0xa1
+
+        public static CallbackResult onHpChanged(byte[] data, CallbackResult prevResult)//0xa1
         {
             UOCharacter character = new UOCharacter(Phoenix.ByteConverter.BigEndian.ToUInt32(data, 1));
             //if (character.Serial == World.Player.Serial) return CallbackResult.Normal;

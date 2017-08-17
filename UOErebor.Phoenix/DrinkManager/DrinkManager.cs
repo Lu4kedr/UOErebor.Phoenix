@@ -16,7 +16,12 @@ namespace Phoenix.Plugins.DrinkManager
         DateTime DrinkTime = DateTime.Now;
         int LastDrinkDelay = 0;
         System.Timers.Timer bw;
+        System.Timers.Timer cureTimer;
         public static bool Annouced = false;
+        private bool CureDrinked;
+        private int CureDelay;
+        private DateTime CureDrinkTime;
+        private bool CureLastAnnouced;
 
         public DrinkManager()
         {
@@ -64,11 +69,23 @@ namespace Phoenix.Plugins.DrinkManager
 
 
             OnPotionLose += DrinkManager_OnPotionLose;
-
+            cureTimer = new System.Timers.Timer(550);
+            cureTimer.Elapsed += CureTimer_Elapsed;
+            cureTimer.Start();
             bw = new System.Timers.Timer(1000);
             bw.Elapsed += Bw_Elapsed;
             bw.Start();
             Core.RegisterClientMessageCallback(0xAD, OnPotionRequest);
+        }
+
+        private void CureTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (!CureLastAnnouced && DateTime.Now > (CureDrinkTime + TimeSpan.FromSeconds(CureDelay)) )
+            {
+                CureLastAnnouced = true;
+                UO.PrintWarning("<<<<< CURE VYPRSELO! >>>>>");
+                World.Player.Print("< CURE VYPRSELO >");
+            }
         }
 
         private void Bw_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -82,7 +99,14 @@ namespace Phoenix.Plugins.DrinkManager
                     Annouced = true;
                 }
             }
-            else Annouced = false;
+            else
+            {
+                Annouced = false;
+                if (TimeSpan.FromSeconds(LastDrinkDelay + 1) - (DateTime.Now - DrinkTime) < TimeSpan.FromSeconds(6)) 
+                {
+                    UO.PrintWarning("Piti za {0} s",(int)((TimeSpan.FromSeconds(LastDrinkDelay + 1) - (DateTime.Now - DrinkTime)).TotalSeconds));
+                }
+            }
             CountPotion();
         }
 
@@ -103,6 +127,11 @@ namespace Phoenix.Plugins.DrinkManager
                 {
                     DrinkTime = DateTime.Now;
                     LastDrinkDelay = PotionDelays[a.Text];
+                    if (a.Text == ".potioncure")
+                    {
+                        CureDrinked = true;
+                        CureDrinkTime = DateTime.Now;
+                    }
                     return CallbackResult.Normal;
                 }
                 else
@@ -116,6 +145,15 @@ namespace Phoenix.Plugins.DrinkManager
 
         private void DrinkManager_OnPotionLose(object sender, PotionLoseArgs e)
         {
+            if(CureDrinked && e.Potion.Command==".potioncure")
+            {
+                CureDrinked = false;
+                if (e.Potion.Name == "Greather Cure")
+                    CureDelay = 380;
+                else CureDelay = 5;
+                CureLastAnnouced = false;
+
+            }
             if (e.Potion.Amount > 0)
                 UO.PrintError("Zbyva  {0}  {1}", e.Potion.Amount, e.Potion.Name);
             else

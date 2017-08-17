@@ -145,6 +145,18 @@ namespace Phoenix.Plugins
             }
         }
 
+        public bool PrintHp
+        {
+            get
+            {
+                return Other.HPPrint;
+            }
+            set
+            {
+                Other.HPPrint = value;
+            }
+        }
+
         public bool OnHitBandage
         {
             get
