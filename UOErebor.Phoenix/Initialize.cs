@@ -259,6 +259,21 @@ namespace Phoenix.Plugins
         }
 
         [Command]
+        public void HitVet()
+        {
+            if (SaveClass.OnHitVet)
+            {
+                SaveClass.OnHitVet = false;
+                UO.PrintError("Veterina po rane Off");
+            }
+            else
+            {
+                SaveClass.OnHitVet = true;
+                UO.PrintInformation("Veterina po rane ON");
+            }
+        }
+
+        [Command]
         public void runy()
         {
             Application.Run(new Runy());
@@ -303,6 +318,7 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("Autolot:");
             Notepad.WriteLine("     ,lot - zapnuti/vypnuti");
             Notepad.WriteLine("     ,lotzem - jendorazove vylotovani nastavenych veci pod nohama");
+            Notepad.WriteLine("     ,lotpvp - loti zbrane z nejblizsiho tela");
             Notepad.WriteLine("     ,kuch - rozrezani okolnich mrtvol");
             Notepad.WriteLine("     ,lotset - nastaveni lotovaciho batohu a rezaciho nastroje");
             Notepad.WriteLine("     ,lotsetex1 - nastaveni dodatecneho typu k lotu");
@@ -316,6 +332,9 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("     ,lotleather - jsou-li v batohu nuzky tak automaticky kuze nastriha");
             Notepad.WriteLine("     ,lotex1");
             Notepad.WriteLine("     ,lotex2");
+            Notepad.WriteLine("     ,vyber - presune vsechny itemy v oznacene truhle/tele do lotbaglu");
+            Notepad.WriteLine("     ,vyber X - X = pauza v ms mezi presunem jednotlivych itemu");
+            Notepad.WriteLine("     ,vyberpvp - vybere oznacene telo s pvp pauzou");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("Ability:");
@@ -365,6 +384,7 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("     ,war - prepina warmod DURAZNE doporucuji nastavit jako hotkej na klavesu Tab");
             Notepad.WriteLine("     ,exp - vypise ziskane zkusenosti od pusteni Phoenixe");
             Notepad.WriteLine("     ,clearexp vymaze exp pocitadlo");
+            Notepad.WriteLine("     ,dropdispel  - vyhodi pod nohy dispel bombu");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("Magery:");
@@ -391,6 +411,8 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("Targeting:");
             Notepad.WriteLine("     ,targetnext - targetuje cervenou a sedou karmu, v pripade ze nikdo takovy neni targetuje i modrou");
             Notepad.WriteLine("     ,targetnext true - targetuje nejblizsi cervenou karmu");
+            Notepad.WriteLine("     ,tpvp - prepina PVM a PVP targetovani");
+
             Notepad.WriteLine("     ");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("Tracking");
@@ -402,10 +424,10 @@ namespace Phoenix.Plugins
             Notepad.WriteLine("     ");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("Veterinary:");
-            Notepad.WriteLine("     ,petset - nastaveni zvirete ktere se ma lecit");
-            Notepad.WriteLine("     ,petheal - pokusi se vylecit peta");
+            Notepad.WriteLine("     ,setpet - nastaveni zvirete ktere se ma lecit");
+            Notepad.WriteLine("     ,healpet - pokusi se vylecit peta");
             Notepad.WriteLine("     ,autopetheal - leci peta do full hp");
-            Notepad.WriteLine("     ");
+            Notepad.WriteLine("     ,HitVet -  on/off leci peta po rane");
             Notepad.WriteLine("     ");
             Notepad.WriteLine("Voodoo:");
             Notepad.WriteLine("     ,obet - provede prikaz .sacrafire, ma-li hrac alespon 80 hp");

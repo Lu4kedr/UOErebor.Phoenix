@@ -168,6 +168,18 @@ namespace Phoenix.Plugins
                 Other.OnHitBandage = value;
             }
         }
+
+        public bool OnHitVet
+        {
+            get
+            {
+                return Other.OnHitVet;
+            }
+            set
+            {
+                Other.OnHitVet = value;
+            }
+        }
         public bool HarmArrow { get; set; }
         public ushort PoisColor
         {

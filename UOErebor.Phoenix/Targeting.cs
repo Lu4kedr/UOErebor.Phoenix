@@ -9,7 +9,24 @@ namespace Phoenix.Plugins
     public class Targeting
     {
         private readonly Notoriety[] Filter = new Notoriety[] { Notoriety.Murderer, Notoriety.Enemy };
+        private readonly Graphic[] Humanoid = new Graphic[] { 0x0191, 0x0190 };
         private readonly List<uint> used = new List<uint>();
+        private bool PVP = false;
+
+        [Command]
+        public void tpvp()
+        {
+            if(PVP)
+            {
+                PVP = false;
+                UO.PrintError("PVM Targetovani");
+            }
+            else
+            {
+                PVP = true;
+                UO.PrintError("PVP Targetovani");
+            }
+        }
 
         [Command]
         public void targetnext()
@@ -32,6 +49,10 @@ namespace Phoenix.Plugins
                 var tlist = World.Characters.Where(x => x.Notoriety > Notoriety.Criminal && x.Distance < 15 && x.Serial != World.Player.Serial && !x.Renamable).ToList();
                 if(World.Player.Notoriety>Notoriety.Guild)
                     tlist= World.Characters.Where(x => x.Distance < 15 && x.Serial != World.Player.Serial && !x.Renamable).ToList();
+                if(PVP)
+                {
+                    tlist = tlist.Where(x => Humanoid.Any(y => x.Model == y)).ToList();
+                }
                 foreach (UOCharacter ch in tlist)
                 {
                     redList.Add(ch);
@@ -51,11 +72,16 @@ namespace Phoenix.Plugins
             bool first = true;
             tryagain:
             var list = World.Characters.Where(x => x.Notoriety > Notoriety.Criminal && x.Distance < 19 && x.Serial != World.Player.Serial && !x.Renamable).ToList();
+            if (World.Player.Notoriety > Notoriety.Guild)
+                list = World.Characters.Where(x => x.Distance < 19 && x.Serial != World.Player.Serial && !x.Renamable).ToList();
+
             if (list.Count < 1)
             {
                 list = World.Characters.Where(x => x.Distance < 19 && x.Serial != World.Player.Serial && !x.Renamable).ToList();
-
-
+            }
+            if (PVP)
+            {
+                list = World.Characters.Where(x => Humanoid.Any(y => x.Model == y) && x.Distance < 19 && x.Serial != World.Player.Serial && !x.Renamable).ToList();
             }
             foreach (UOCharacter mob in list)
             {

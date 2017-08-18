@@ -10,7 +10,7 @@ namespace Phoenix.Plugins
     public class Veterinary
     {
         static UOCharacter pet = null;
-        bool healed = false;
+        public static bool healed = true;
         bool onoff = false;
         bool harmed = false;
 

@@ -20,7 +20,6 @@ namespace Phoenix.Plugins
             set
             {
                 autolotState = value;
-                Notepad.WriteLine(autolotState.ToString());
                 Reload();
             }
         }
@@ -33,6 +32,7 @@ namespace Phoenix.Plugins
         private List<Serial> IgnoreList = new List<Serial>();
         private readonly List<string> jezdidla = new List<string> { "body of mustang", "body of zostrich", "body of oclock", "body of orn", "oody of ledni medved", "body of ridgeback", "body of ridgeback savage" };
         private static ushort[] FOOD = { 0x0978, 0x097A, 0x097B, 0x097E, 0x098C, 0x0994, 0x09B7, 0x09B9, 0x09C0, 0x09C9, 0x09D0, 0x09D1, 0x09D2, 0x09E9, 0x09EA, 0x09EC, 0x09F2, 0x0C5C, 0x0C64, 0x0C66, 0x0C6A, 0x0C6D, 0x0C70, 0x0C72, 0x0C74, 0x0C77, 0x0C79, 0x0C7B, 0x0C7F, 0x0D39, 0x103B, 0x1040, 0x1041, 0x1608, 0x1609, 0x160A, 0x171F, 0x1726, 0x1727, 0x1728, 0x172A };
+        private static ushort[] Weapons = { 0x13F9, 0x13F8, 0x13FF, 0x13FE, 0x143F , 0x143E , 0x13FB , 0x13FA , 0x1438 , 0x1439 , 0x13BA , 0x13B9 , 0x13B1 , 0x13B2 , 0x13B6 , 0x13B5 , 0x1401 , 0x1400 , 0x1441 , 0x1440, 0x13FC , 0x13FD , 0x1086 , 0x1087 , 0x108A , 0x0F4F , 0x0F4D , 0x1541 , 0x1F08 , 0x1515 , 0x1F03 };
         public static ushort Extend1 = default(ushort);
         public static ushort Extend2 = default(ushort);
 
@@ -516,6 +516,20 @@ namespace Phoenix.Plugins
             {
                 UO.MoveItem(i, ushort.MaxValue, Aliases.GetObject("LotBackpack") == 0xFFFFFFF ? World.Player.Backpack : Aliases.GetObject("LotBackpack"));
                 UO.Wait(300);
+            }
+        }
+
+        [Command("lotpvp"), BlockMultipleExecutions]
+        public void lotpvp()
+        {
+            var body = World.Ground.Where(x => x.Graphic == 0x2006 && x.Distance<4).ToList();
+            body.Sort((x, y) =>x.Distance.CompareTo(y.Distance));
+            var closestBody = body.First();
+            foreach (var it in closestBody.Items.Where(x => Weapons.Any(y => x.Graphic == y)).ToList())
+            {
+                UO.MoveItem(it, ushort.MaxValue, Aliases.GetObject("LotBackpack") == 0xFFFFFFF ? World.Player.Backpack : Aliases.GetObject("LotBackpack"));
+                UO.Wait(1250);
+                if (closestBody.Distance > 3) return;
             }
         }
 

@@ -19,6 +19,7 @@ namespace Phoenix.Plugins
         private static bool autoUnParalyze;
         private static bool onHitBandage;
         private static bool hpPrint;
+        private static bool onHitVet;
 
         public static event EventHandler OnParalyze;
 
@@ -35,7 +36,6 @@ namespace Phoenix.Plugins
                     Core.UnregisterServerMessageCallback(0x1C, OnHitBand);
 
                     Core.RegisterServerMessageCallback(0x1C, OnHitBand);
-                    UO.Print("regis");
                 }
                 else
                 {
@@ -44,6 +44,28 @@ namespace Phoenix.Plugins
                 onHitBandage = value;
             }
         }
+        public static bool OnHitVet
+        {
+            get
+            {
+                return onHitVet;
+            }
+            set
+            {
+                if (value)
+                {
+                    Core.UnregisterServerMessageCallback(0x1C, OnHitVete);
+
+                    Core.RegisterServerMessageCallback(0x1C, OnHitVete);
+                }
+                else
+                {
+                    Core.UnregisterServerMessageCallback(0x1C, OnHitVete);
+                }
+                onHitVet = value;
+            }
+        }
+        
         public static bool AutoUnParalyze
         {
             get
@@ -144,6 +166,17 @@ namespace Phoenix.Plugins
             }
         }
 
+        [Command("vyber"), BlockMultipleExecutions]
+        public void TakeAllFrom()
+        {
+            TakeAllFrom(10);
+        }
+
+        [Command("vyberpvp"), BlockMultipleExecutions]
+        public void TakeAllFromPVP()
+        {
+            TakeAllFrom(1250);
+        }
         [Command("vyber"), BlockMultipleExecutions]
         public void TakeAllFrom(int delay)
         {
@@ -424,7 +457,7 @@ namespace Phoenix.Plugins
             {
                 if (character.Renamable)
                 {
-                    character.Print(0x005d, "[{0} HP] {1}", ((maxHits / 100) * hits), (hits - character.Hits));
+                    character.Print(0x005d, "[{0}% HP]   {1}", ((maxHits / 100) * hits), (hits - character.Hits));
                     return CallbackResult.Normal;
 
                 }
@@ -443,18 +476,18 @@ namespace Phoenix.Plugins
                 {
                     if (character.Serial == World.Player.Serial)
                     {
-                        character.Print(color[col], "[{0} HP] {1}", ((maxHits / 100) * hits), (hits - character.Hits));
+                        character.Print(color[col], "[{0}% HP]   {1}", ((maxHits / 100) * hits), (hits - character.Hits));
 
 
                     }
                     else
-                        character.Print(color[col], "{2} [{0} HP] {1}", ((maxHits / 100) * hits), (hits - character.Hits), character.Name);
+                        character.Print(color[col], "{2} [{0}% HP]   {1}", ((maxHits / 100) * hits), (hits - character.Hits), character.Name);
                 }
 
 
 
                 if (character.Serial == Aliases.LastAttack)
-                    character.Print(color[3], "[{0} HP] {1}", ((maxHits / 100) * hits), (hits - character.Hits));
+                    character.Print(color[3], "[{0}% HP]   {1}", ((maxHits / 100) * hits), (hits - character.Hits));
 
             }
             return CallbackResult.Normal;
@@ -497,6 +530,24 @@ namespace Phoenix.Plugins
             }
             return CallbackResult.Normal;
         }
+
+        static CallbackResult OnHitVete(byte[] data, CallbackResult prevResult)
+        {
+            AsciiSpeech packet = new AsciiSpeech(data);
+
+            foreach (string s in onHitCalls)
+            {
+                if (packet.Text.Contains(s) && Veterinary.healed)
+                {
+                    Core.UnregisterServerMessageCallback(0x1C, OnHitVete);
+                    UO.Say(",healpet");
+                    Core.RegisterServerMessageCallback(0x1C, OnHitVete);
+                    return CallbackResult.Normal;
+                }
+            }
+            return CallbackResult.Normal;
+        }
+
         [Command]
         public void dmg()
         {
@@ -512,6 +563,20 @@ namespace Phoenix.Plugins
                 while (World.Player.Hits < 130)
                     UO.Wait(100);
                 UO.Wait(200);
+            }
+        }
+
+        [Command]
+        public void dropdispel()
+        {
+            try
+            {
+                var dBomb = World.Player.Backpack.AllItems.FindType(0x0F0E, 0x0993);
+                UO.DropHere(1, dBomb);
+            }
+            catch
+            {
+                UO.PrintError("Nemas Dispel Bombu");
             }
         }
     }
